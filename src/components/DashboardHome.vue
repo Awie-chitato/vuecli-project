@@ -205,7 +205,7 @@ p {
 .glass-card {
             width: 300px;
             
-            background: rgba(255, , 255, 0.1); /* Semi-transparan */
+            background: rgba(255, 255, 0.1); /* Semi-transparan */
             backdrop-filter: blur(15px); /* Efek blur */
             border-radius: 15px;
             padding: 20px;
