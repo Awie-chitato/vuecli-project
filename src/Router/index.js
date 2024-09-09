@@ -1,3 +1,4 @@
+import EventList from '@/components/EventList.vue';
 import { createRouter, createWebHistory } from 'vue-router';
 import AdminPart1 from '../components/AdminPart1`.vue';
 import Dashboard from '../components/Dashboard.vue';
@@ -22,6 +23,13 @@ const routes = [
           name: 'DashboardHome',
           component: DashboardHome,
         },
+
+        {
+          path: 'eventlist',
+          name: 'EventList',
+          component: EventList,
+        },
+
         {
           path: 'transactions',
           name: 'Transactions',

@@ -1,36 +1,42 @@
-
 <template>
-  <div class="dashboard">
-    <aside class="sidebar">
+  <div class="dashboard flex h-screen bg-gradient-to-br from-blue-400 to-blue-700">
+    <aside class="sidebar w-64 bg-white bg-opacity-10 backdrop-filter backdrop-blur-lg p-5 flex flex-col">
       <div class="logo">
-        <!-- Ganti dengan logo Anda -->
-        <img src="@/assets/logo.png" alt="Logo" />
+        <!-- Logo FPTI yang diubah menjadi bulat dan di-zoom -->
+        <img src="@/assets/fpti.png" alt="Logo FPTI" class="logo-image rounded-full w-32 h-32 mx-auto mb-4 shadow-lg" />
       </div>
-      <div class="search-bar">
-        <input type="text" placeholder="Cari..." />
-        <button class="search-button">🔍</button>
-      </div>
-      <ul class="menu">
-        <li @click="navigateTo('dashboardhome')">📊 Dashboard</li>
-        <li @click="navigateTo('transactions')">💳 Transaksi</li>
-        <li @click="navigateTo('financials')">📈 Laporan Keuangan</li>
-        <li @click="navigateTo('debt-credit')">💰 Hutang Piutang</li>
+      <ul class="menu space-y-4">
+        <li @click="navigateTo('dashboardhome')" class="text-white py-2 px-4 rounded-lg bg-opacity-20 hover:bg-blue-200 hover:bg-opacity-30 cursor-pointer transition">
+          Dashboard
+        </li>
+        <li @click="navigateTo('eventlist')" class="text-white py-2 px-4 rounded-lg bg-opacity-20 hover:bg-blue-200 hover:bg-opacity-30 cursor-pointer transition">
+          Event List
+        </li>
+        <li @click="navigateTo('transactions')" class="text-white py-2 px-4 rounded-lg bg-opacity-20 hover:bg-blue-200 hover:bg-opacity-30 cursor-pointer transition">
+          Transaksi
+        </li>
+        <li @click="navigateTo('debt-credit')" class="text-white py-2 px-4 rounded-lg bg-opacity-20 hover:bg-blue-200 hover:bg-opacity-30 cursor-pointer transition">
+          Hutang Piutang
+        </li>
+        <li @click="navigateTo('financials')" class="text-white py-2 px-4 rounded-lg bg-opacity-20 hover:bg-blue-200 hover:bg-opacity-30 cursor-pointer transition">
+          Laporan Keuangan
+        </li>
       </ul>
-      <div class="user-info">
-        <img src="https://via.placeholder.com/150" alt="Avatar Pengguna" class="user-avatar" />
-        <span class="user-name"> Awie Chitato </span>
-      </div>
-      <div class="settings">
-        <button @click="navigateTo('settings')">⚙️ Pengaturan</button>
-        <button @click="handleLogout">🚪 Keluar</button>
+      <div class="settings mt-auto">
+        <button @click="navigateTo('settings')" class="w-full py-2 px-4 rounded-lg bg-blue-500 hover:bg-blue-600 text-white mb-2">
+          ⚙️ Pengaturan
+        </button>
+        <button @click="handleLogout" class="w-full py-2 px-4 rounded-lg bg-red-500 hover:bg-red-600 text-white">
+          🚪 Keluar
+        </button>
       </div>
     </aside>
-    <main class="content">
-      <header class="content-header">
-        <h1>{{ pageTitle }}</h1>
-        <div class="quick-actions">
-          <button @click="showNotifications">🔔</button>
-          <button @click="showHelp">❓</button>
+    <main class="content flex-1 p-6 bg-color-white bg-opacity-10 backdrop-filter backdrop-blur-lg overflow-y-auto">
+      <header class="content-header flex justify-between items-center mb-6">
+        <h1 class="text-3xl font-bold text-white">{{ pageTitle }}</h1>
+        <div class="quick-actions flex items-center">
+          <img src="https://via.placeholder.com/150" alt="Avatar Pengguna" class="user-avatar rounded-full w-12 h-12 shadow-lg" />
+          <span class="user-name text-white ml-4"> Awie Chitato </span>
         </div>
       </header>
       <router-view />
@@ -38,11 +44,29 @@
   </div>
 </template>
 
+
 <script>
 export default {
   data() {
     return {
-      pageTitle: 'Dashboard'
+      pageTitle: 'Dashboard',
+      events: [
+        { id: 1, name: 'Konser Musik', date: '2023-07-15' },
+        { id: 2, name: 'Pameran Seni', date: '2023-07-20' }
+      ],
+      venues: [
+        { id: 1, name: 'Gedung Serbaguna', location: 'Jakarta' },
+        { id: 2, name: 'Lapangan Merdeka', location: 'Surabaya' }
+      ],
+      transactions: [
+        { id: 1, description: 'Pembayaran Tiket', amount: 500000 },
+        { id: 2, description: 'Sewa Tempat', amount: 2000000 }
+      ],
+      balance: 10000000,
+      cashIn: 5000000,
+      cashOut: 3000000,
+      totalDebt: 1500000,
+      totalCredit: 2500000
     }
   },
   methods: {
@@ -57,6 +81,7 @@ export default {
     },
     updatePageTitle(route) {
       const titles = {
+        'eventlist': 'Event',
         'dashboardhome': 'Dashboard',
         'transactions': 'Transaksi',
         'financials': 'Laporan Keuangan',
@@ -82,47 +107,77 @@ export default {
   display: flex;
   height: 100vh;
   color: hsl(0, 0%, 4%);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: linear-gradient(135deg, #f4f4f4, #e0e0e0);
 }
 
 .sidebar {
   width: 250px;
   background-color: #0274d1;
-  padding: 20px;
-  box-shadow: 2px 0 5px rgba(10, 0, 0, 0.1);
+  padding: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
   display: flex;
   flex-direction: column;
   position: relative;
+  height: 100vh; /* Full height for sidebar */
+  overflow-y: auto; /* Allows sidebar to scroll if content overflows */
+  transition: transform 0.3s ease;
 }
 
-.logo img {
-  width: 100px;
-  margin-bottom: 20px;
+.sidebar:hover {
+  transform: translateX(0);
 }
 
-.search-bar {
+.logo {
   display: flex;
+  justify-content: center;
   align-items: center;
   margin-bottom: 20px;
 }
 
-.search-bar input {
-  flex: 1;
-  padding: 5px;
-  border-radius: 4px;
-  border: 1px solid hsl(194, 100%, 42%);
+.logo-image {
+  width: 120px;
+  height: 120px;
+  margin-top: 10px;
+  border-radius: 50%;
+  object-fit: cover;
+  object-position: center;
+  border: 4px solid #fff;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  transition: transform 0.3s ease;
 }
 
-.search-button {
-  background-color: transparent;
+.logo-image:hover {
+  transform: scale(1.1);
+}
+
+.settings {
+  margin-bottom: 20px; /* Space between settings and menu */
+}
+
+.settings button {
+  width: 100%;
+  padding: 10px;
   border: none;
+  background-color: #fff;
+  color: #0274d1;
   cursor: pointer;
-  font-size: 18px;
+  transition: background-color 0.3s, transform 0.3s;
+  margin-top: -100px;
+  margin-bottom: 10px;
+  border-radius: 4px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.settings button:hover {
+  background-color: rgba(255, 255, 255, 0.8);
+  transform: scale(1.05);
 }
 
 .menu {
   list-style: none;
   padding: 0;
-  margin-bottom: auto;
+  margin-bottom: auto; /* Ensures menu is pushed to the bottom if settings are not enough */
 }
 
 .menu li {
@@ -132,64 +187,23 @@ export default {
   border-radius: 4px;
   display: flex;
   align-items: center;
-  transition: background-color 0.3s;
-  color: white;
+  transition: background-color 0.3s, transform 0.3s;
+  color: #fff;
+  font-weight: bold;
 }
 
 .menu li:hover {
   background-color: rgba(255, 255, 255, 0.1);
-}
-
-.menu li svg {
-  margin-right: 10px;
-}
-
-.user-info {
-  display: flex;
-  align-items: center;
-  margin-bottom: 20px;
-  padding: 10px;
-  background-color: rgba(255, 255, 255, 0.1);
-  border-radius: 4px;
-}
-
-.user-avatar {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  margin-right: 10px;
-}
-
-.user-name {
-  color: white;
-  font-weight: bold;
-}
-
-.settings {
-  margin-top: auto;
-}
-
-.settings button {
-  width: 100%;
-  padding: 10px;
-  border: none;
-  background-color: rgba(255, 255, 255, 0.1);
-  color: white;
-  cursor: pointer;
-  transition: background-color 0.3s;
-  margin-bottom: 10px;
-  border-radius: 4px;
-}
-
-.settings button:hover {
-  background-color: rgba(255, 255, 255, 0.2);
+  transform: translateX(5px);
 }
 
 .content {
   flex: 1;
   padding: 20px;
-  background-color: #f4f4f4;
-  overflow-y: auto;
+  background-color: #fff;
+  box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.1);
+  overflow-y: auto; /* Allows content to scroll if it overflows */
+  transition: background-color 0.3s;
 }
 
 .content-header {
@@ -198,15 +212,71 @@ export default {
   align-items: center;
   margin-bottom: 20px;
   padding-bottom: 10px;
-  border-bottom: 1px solid #ddd;
+  border-bottom: 2px solid #ddd;
+}
+.content-header {
+  font-size: 10px;
 }
 
-.quick-actions button {
-  background-color: transparent;
-  border: none;
+.quick-actions {
+  display: flex;
+  align-items: center;
+}
+
+.user-avatar {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  margin-right: 10px;
+  transition: transform 0.3s;
+}
+
+.user-avatar:hover {
+  transform: scale(1.1);
+}
+
+.user-name {
+  color: #333;
+  font-weight: bold;
+}
+
+.dashboard-content {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 20px;
+}
+
+.card {
+  background-color: #blue;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  transition: box-shadow 0.3s, transform 0.3s;
+}
+
+.card:hover {
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+  transform: translateY(-5px);
+}
+
+.card h2 {
+  margin-bottom: 15px;
+  color: #0274d1;
+}
+
+.card ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.card li {
+  margin-bottom: 10px;
+}
+
+.balance {
   font-size: 24px;
-  cursor: pointer;
-  margin-left: 10px;
+  font-weight: bold;
+  color: #0274d1;
 }
 
 @media (max-width: 768px) {
@@ -218,6 +288,7 @@ export default {
     width: 100%;
     box-shadow: none;
     padding: 10px;
+    height: auto; /* Auto height on small screens */
   }
 
   .content {
@@ -232,5 +303,10 @@ export default {
   .quick-actions {
     margin-top: 10px;
   }
+
+  .dashboard-content {
+    grid-template-columns: 1fr;
+  }
 }
+
 </style>

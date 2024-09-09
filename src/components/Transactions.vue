@@ -1,174 +1,322 @@
 <template>
   <div class="transactions">
-    <h2 class="dashboard-title">Transaksi</h2>
+    <h2 class="dashboard-title">Daftar Transaksi</h2>
     <div class="transaction-container">
-      <div class="input-section">
-        <div class="transaction-type">
-          <button class="type-button active" @click="activeType = 'pemasukan'">Pemasukan</button>
-          <button class="type-button" @click="activeType = 'pengeluaran'">Pengeluaran</button>
+      <div v-if="!showInputForm" class="history-section">
+        <div class="table-header">
+          
+          <button @click="showTransactionTypeModal = true" class="add-button" style="background-color: #0066cc; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; margin-right: 10px;">Tambah</button>
         </div>
-        <h3 class="transaction-title">Input Transaksi {{ activeType === 'pemasukan' ? 'Pemasukan' : 'Pengeluaran' }}</h3>
-        <div class="form-container">
-          <form @submit.prevent="submitTransaction">
-            <div class="form-group">
-              <label for="amount">Jumlah:</label>
-              <div class="input-wrapper">
-                <input type="text" id="amount" v-model="newTransaction.amount" required>
-              </div>
-            </div>
-            <div class="form-group">
-              <label for="date">Tanggal:</label>
-              <div class="input-wrapper">
-                <input type="date" id="date" v-model="newTransaction.date" required>
-              </div>
-            </div>
-            <div class="form-group">
-              <label for="description">Deskripsi:</label>
-              <div class="input-wrapper">
-                <input type="text" id="description" v-model="newTransaction.description" required>
-              </div>
-            </div>
-            <div class="form-group">
-              <label for="paymentMethod">Metode Pembayaran:</label>
-              <div class="input-wrapper">
-                <select id="paymentMethod" v-model="newTransaction.paymentMethod" required>
-                  <option value="dana">Dana</option>
-                  <option value="bank">Transfer Bank</option>
-                </select>
-              </div>
-            </div>
-            <button type="submit" class="submit-button">Simpan Transaksi</button>
-          </form>
-        </div>
-      </div>
-      <div class="history-section">
-        <h3 class="transaction-title">Riwayat Transaksi</h3>
         <table class="transaction-table">
           <thead>
             <tr>
+              <th>Nama Event</th>
+              <th>Nominal</th>
               <th>Tanggal</th>
-              <th>Tipe</th>
-              <th>Jumlah</th>
               <th>Deskripsi</th>
               <th>Metode Pembayaran</th>
+              <th>Status</th>
+              <th>Jenis Transaksi</th>
+              <th>Aksi</th>
             </tr>
           </thead>
           <tbody>
-            <tr v-for="(transaction, index) in transactions" :key="index">
-              <td>{{ transaction.date }}</td>
-              <td>{{ transaction.type }}</td>
-              <td>{{ transaction.amount }}</td>
-              <td>{{ transaction.description }}</td>
-              <td>{{ transaction.paymentMethod }}</td>
+            <tr v-for="(transaction, index) in combinedTransactions" :key="index">
+              <td>{{ transaction?.nama_event }}</td>
+              <td>{{ transaction?.nominal }}</td>
+              <td>{{ transaction?.tanggal }}</td>
+              <td>{{ transaction?.deskripsi }}</td>
+              <td>{{ transaction?.metode_pembayaran }}</td>
+              <td>{{ transaction?.status }}</td>
+              <td>{{ transaction?.jenis_transaksi }}</td>
+              <td class="action-column">
+                <button @click="editItem(transaction)" class="action-button edit" style="background-color: #ffc107; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; margin-right: 5px;">Edit</button>
+                <button @click="deleteItem(transaction)" class="action-button delete" style="background-color: #dc3545; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer;">Delete</button>
+              </td>
             </tr>
           </tbody>
         </table>
+      </div>
+
+      <!-- Modal untuk memilih jenis transaksi -->
+      <div v-if="showTransactionTypeModal" class="modal">
+        <div class="modal-content">
+          <h3>Pilih Jenis Transaksi</h3>
+          <button @click="selectTransactionType('pemasukan')">Transaksi Pemasukan</button>
+          <button @click="selectTransactionType('pengeluaran')">Transaksi Pengeluaran</button>
+          <button @click="showTransactionTypeModal = false">Batal</button>
+        </div>
+      </div>
+
+      <!-- Form untuk input atau edit transaksi -->
+      <div v-if="showInputForm" class="input-form">
+        <h3>{{ editMode ? 'Edit Transaksi' : 'Form Input Transaksi' }} {{ selectedTransactionType === 'pemasukan' ? 'Pemasukan' : 'Pengeluaran' }}</h3>
+        <form @submit.prevent="submitForm">
+          <div class="form-group"></div>
+          <div class="form-group">
+            <label for="nominal">Nominal:</label>
+            <input type="number" id="nominal" v-model="newTransaction.nominal" required>
+          </div>
+          <div class="form-group">
+            <label for="deskripsi">Deskripsi:</label>
+            <textarea id="deskripsi" v-model="newTransaction.deskripsi"></textarea>
+          </div>
+          <div class="form-group">
+            <label for="metodePembayaran">Metode Pembayaran:</label>
+            <select id="metodePembayaran" v-model="newTransaction.metode_pembayaran" required>
+              <option value="">Pilih Metode Pembayaran</option>
+              <option value="tunai">Tunai</option>
+              <option value="transfer">Transfer</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="status">Status:</label>
+            <select id="status" v-model="newTransaction.status" required>
+              <option value="">Pilih Status</option>
+              <option value="selesai">Selesai</option>
+              <option value="pending">Pending</option>
+            </select>
+          </div>
+          <button type="submit" class="submit-button">{{ editMode ? 'Update' : 'Simpan' }}</button>
+          <button type="button" @click="cancelForm" class="cancel-button">Batal</button>
+        </form>
       </div>
     </div>
   </div>
 </template>
 
 <script>
+import axios from 'axios';
+
 export default {
   name: 'Transactions',
   data() {
     return {
-      activeType: 'pemasukan',
+      showInputForm: false,
+      showTransactionTypeModal: false,
+      editMode: false,
+      selectedTransactionType: '',
       newTransaction: {
-        type: 'pemasukan',
-        amount: '',
-        date: '',
-        description: '',
-        paymentMethod: ''
+        id: null,
+        nama_event: '',
+        nominal: '',
+        tanggal: '',
+        deskripsi: '',
+        metode_pembayaran: '',
+        status: '',
+        jenis_transaksi: ''
       },
-      transactions: []
-    }
+      combinedTransactions: [],
+      events: []
+    };
   },
   methods: {
-    submitTransaction() {
-      this.newTransaction.type = this.activeType;
-      this.transactions.push({...this.newTransaction});
-      // Reset form setelah submit
+    fetchTransactions() {
+      axios.get('http://127.0.0.1:8000/api/show-dua-transaksi')
+        .then(response => {
+          if (response.data.success) {
+            this.combinedTransactions = response.data.data.map(item => {
+              return {
+                ...item,
+              };
+            }).sort((a, b) => new Date(b.tanggal) - new Date(a.tanggal));
+          } else {
+            console.error('Respon gagal:', response.data.message);
+          }
+        })
+        .catch(error => {
+          console.error('Terjadi kesalahan saat mengambil data transaksi:', error);
+        });
+    },
+    fetchEvents() {
+      axios.get('http://127.0.0.1:8000/api/show-semua-event-fpti')
+        .then(response => {
+          if (response.data.success) {
+            this.events = response.data.data;
+          } else {
+            console.error('Respon gagal:', response.data.message);
+          }
+        })
+        .catch(error => {
+          console.error('Terjadi kesalahan saat mengambil data event:', error);
+        });
+    },
+    getEventName(eventId) {
+      const event = this.events.find(e => e.id === eventId);
+      return event ? event.event_id : 'Nama_Event';
+    },
+    editItem(transaction) {
+      this.editMode = true;
+      this.showInputForm = true;
+      this.newTransaction = { ...transaction };
+      this.selectedTransactionType = transaction.jenis_transaksi;
+    },
+    deleteItem(transaction) {
+      if (confirm('Apakah Anda yakin ingin menghapus transaksi ini?')) {
+        const endpoint = transaction.jenis_transaksi === 'pemasukan'
+          ? 'http://127.0.0.1:8000/api/delete-event-transaksi'
+          : 'http://127.0.0.1:8000/api/delete-event-pengeluaran';
+        
+        axios.delete(`${endpoint}/${transaction.id}`)
+          .then(response => {
+            if (response.data.success) {
+              this.fetchTransactions(); // Refresh daftar transaksi
+              alert('Transaksi berhasil dihapus');
+            } else {
+              console.error('Gagal menghapus transaksi:', response.data.message);
+              alert('Gagal menghapus transaksi');
+            }
+          })
+          .catch(error => {
+            console.error('Terjadi kesalahan saat menghapus transaksi:', error);
+            alert('Terjadi kesalahan saat menghapus transaksi');
+          });
+      }
+    },
+    submitForm() {
+      const endpoint = this.editMode
+        ? (this.newTransaction.jenis_transaksi === 'pemasukan'
+           ? `http://127.0.0.1:8000/api/update-event-transaksi/${this.newTransaction.id}`
+           : `http://127.0.0.1:8000/api/update-event-pengeluaran/${this.newTransaction.id}`)
+        : (this.selectedTransactionType === 'pemasukan'
+           ? 'http://127.0.0.1:8000/api/create-transaksi-fpti'
+           : 'http://127.0.0.1:8000/api/create-pengeluaran-fpti');
+
+      const method = this.editMode ? 'put' : 'post';
+      
+      axios[method](endpoint, this.newTransaction)
+        .then(response => {
+          if (response.data.success) {
+            this.fetchTransactions();
+            this.showInputForm = false;
+            this.editMode = false;
+            this.resetForm();
+            alert(this.editMode ? 'Transaksi berhasil diperbarui' : 'Transaksi berhasil ditambahkan');
+          } else {
+            console.error('Gagal menyimpan transaksi:', response.data.message);
+            alert('Gagal menyimpan transaksi');
+          }
+        })
+        .catch(error => {
+          console.error('Terjadi kesalahan saat menyimpan transaksi:', error);
+          alert('Terjadi kesalahan saat menyimpan transaksi');
+        });
+    },
+    resetForm() {
       this.newTransaction = {
-        type: this.activeType,
-        amount: '',
-        date: '',
-        description: '',
-        paymentMethod: ''
+        id: null,
+        nama_event: '',
+        nominal: '',
+        tanggal: '',
+        deskripsi: '',
+        metode_pembayaran: '',
+        status: '',
+        jenis_transaksi: ''
       };
-      alert('Transaksi berhasil disimpan!');
+    },
+    cancelForm() {
+      this.showInputForm = false;
+      this.editMode = false;
+      this.resetForm();
     }
   },
-  watch: {
-    activeType(newValue) {
-      this.newTransaction.type = newValue;
-    }
+  mounted() {
+    this.fetchTransactions();
+    this.fetchEvents();
   }
 };
+
 </script>
 
 <style scoped>
-.transactions {
-  padding: 20px;
-  background: #ffffff;
-  min-height: 100vh;
-  position: relative;
+.transaction-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+  background-color: #f9f9f9;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-.dashboard-title {
-  font-size: 24px;
-  color: #0066cc;
-  margin-bottom: 20px;
+.transaction-table th, 
+.transaction-table td {
+  padding: 15px;
+  text-align: left;
+  border-bottom: 1px solid #e0e0e0;
 }
 
-.transaction-title {
-  font-size: 20px;
-  color: #0066cc;
-  margin-bottom: 15px;
+.transaction-table th {
+  background-color: #0066cc;
+  color: white;
+  font-weight: bold;
+  text-transform: uppercase;
 }
 
-.transaction-container {
+.transaction-table tr:hover {
+  background-color: #f1f1f1;
+  transition: background-color 0.3s ease;
+}
+
+.transaction-table tr:nth-child(even) {
+  background-color: #f4f7fc;
+}
+
+.transaction-table td {
+  font-size: 14px;
+  color: #333;
+}
+
+.transaction-table td:first-child {
+  font-weight: bold;
+}
+
+.action-column {
+  text-align: center;
+  white-space: nowrap;
+}
+
+.action-button {
+  padding: 5px
+}
+
+.action-column {
+  text-align: center;
+}
+.action-button.edit {
+  background-color: #ffc107;
+}
+
+.action-button.delete {
+  background-color: #dc3545;
+}
+
+.table-header {
   display: flex;
   justify-content: space-between;
-}
-
-.input-section {
-  width: 45%;
-}
-
-.history-section {
-  width: 50%;
-}
-
-.transaction-type {
-  display: flex;
-  justify-content: flex-start;
+  align-items: center;
   margin-bottom: 20px;
 }
 
-.type-button {
-  margin-right: 10px;
-  padding: 10px 20px;
-  background-color: rgba(3, 169, 244, 0.1);
+.add-button {
+  background-color: #0066cc;
+  color: white;
   border: none;
-  border-radius: 5px;
+  padding: 10px 20px;
+  border-radius: 8px;
   cursor: pointer;
-  color: #000000;
-  transition: all 0.3s ease;
-  font-size: 14px;
+  transition: background-color 0.3s ease;
 }
 
-.type-button.active {
-  background-color: rgba(3, 169, 244, 0.3);
-  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+.add-button:hover {
+  background-color: #0052a3;
 }
 
-.form-container {
-  background: rgba(3, 169, 244, 0.1);
-  backdrop-filter: blur(10px);
-  border-radius: 10px;
+.input-form {
+  background-color: #f2f2f2;
   padding: 20px;
-  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+  border-radius: 5px;
+  margin-top: 20px;
 }
 
 .form-group {
@@ -178,54 +326,133 @@ export default {
 .form-group label {
   display: block;
   margin-bottom: 5px;
-  color: #000000;
 }
 
-.input-wrapper {
-  position: relative;
-}
-
-.form-group input, .form-group select {
+.form-group input, .form-group select, .form-group textarea {
   width: 100%;
-  padding: 10px;
-  border: 1px solid rgba(3, 169, 244, 0.3);
+  padding: 5px;
+  border: 1px solid #ddd;
+  border-radius: 3px;
+}
+
+.submit-button, .cancel-button {
+  padding: 10px 20px;
+  border: none;
   border-radius: 5px;
-  background-color: rgba(255, 255, 255, 0.8);
+  cursor: pointer;
+  margin-right: 10px;
 }
 
 .submit-button {
+  background-color: #0066cc;
+  color: white;
+}
+
+.cancel-button {
+  background-color: #cc0000;
+  color: white;
+}
+
+.modal {
+  position: fixed;
+  z-index: 1;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0,0,0,0.4);
+}
+
+.modal-content {
+  background-color: #fefefe;
+  margin: 15% auto;
+  padding: 20px;
+  border: 1px solid #888;
+  width: 80%;
+  max-width: 500px;
+  border-radius: 5px;
+}
+
+.modal-content button {
+  display: block;
   width: 100%;
   padding: 10px;
-  background-color: rgba(3, 169, 244, 0.8);
+  margin-top: 10px;
+  background-color: #0066cc;
   color: white;
   border: none;
   border-radius: 5px;
   cursor: pointer;
-  transition: all 0.3s ease;
 }
 
-.submit-button:hover {
-  background-color: rgba(3, 169, 244, 1);
+.modal-content button:hover {
+  background-color: #0052a3;
 }
 
 .transaction-table {
   width: 100%;
   border-collapse: collapse;
   margin-top: 20px;
+  background-color: #f9f9f9;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-.transaction-table th, .transaction-table td {
-  border: 1px solid rgba(3, 169, 244, 0.3);
+
+.submit-button, .cancel-button {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-right: 10px;
+}
+
+.submit-button {
+  background-color: #0066cc;
+  color: white;
+}
+
+.cancel-button {
+  background-color: #cc0000;
+  color: white;
+}
+
+.modal {
+  position: fixed;
+  z-index: 1;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0,0,0,0.4);
+}
+
+.modal-content {
+  background-color: #fefefe;
+  margin: 15% auto;
+  padding: 20px;
+  border: 1px solid #888;
+  width: 80%;
+  max-width: 500px;
+  border-radius: 5px;
+}
+
+.modal-content button {
+  display: block;
+  width: 100%;
   padding: 10px;
-  text-align: left;
+  margin-top: 10px;
+  background-color: #0066cc;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
 }
 
-.transaction-table th {
-  background-color: rgba(3, 169, 244, 0.1);
-  font-weight: bold;
-}
-
-.transaction-table tr:nth-child(even) {
-  background-color: rgba(3, 169, 244, 0.05);
+.modal-content button:hover {
+  background-color: #0052a3;
 }
 </style>

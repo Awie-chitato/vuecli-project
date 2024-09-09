@@ -1,95 +1,120 @@
 <template>
-  <div class="dashboard-home">
-    <h2 class="dashboard-title">Dashboard</h2>
-    <div class="saldo-summary">
-      <div class="saldo-card">
-        <div class="icon-container">
-          <i class="fas fa-arrow-circle-up"></i>
+  
+  <div class="dashboard-content">
+        <div class="glass-card">
+          <h2>Event Mendatang</h2>
+          <ul class="event-list">
+            <li v-for="event in upcomingEvents" :key="event.id" class="event-item">
+              <span class="event-name" style="color: green; margin-right: 10px;">{{ event.nama_event }}</span>
+              <span class="event-date" style="color: green;">{{ event.tanggal_event }}</span>
+            </li>
+          </ul>
         </div>
-        <h3>Saldo Masuk</h3>
-        <p class="saldo-masuk"><i class="fas fa-arrow-right"></i> Lihat detail saldo masuk</p>
-      </div>
-      <div class="saldo-card">
-        <div class="icon-container">
-          <i class="fas fa-arrow-circle-down"></i>
+        <div class="glass-card">
+          <h2>Event Selesai</h2>
+          <ul class="event-list">
+            <li v-for="event in pastEvents" :key="event.id" class="event-item">
+              <span class="event-name" style="color: red; margin-right: 10px;">{{ event.nama_event }}</span>
+              <span class="event-date" style="color: red;">{{ event.tanggal_event }}</span>
+            </li>
+          </ul>
         </div>
-        <h3>Saldo Keluar</h3>
-        <p class="saldo-keluar"><i class="fas fa-arrow-right"></i> Lihat detail saldo keluar</p>
+        <div class="glass-card">
+          <h2>Jatuh Tempo Hutang Piutang Mendatang</h2>
+          <ul class="HP-list">
+            <li v-for="HP in upcomingHp" :key="HP.id" class="HP-item">
+              <span class="HP-kategori" style="color: green; margin-right: 10px;">{{ HP.kategori }}</span>
+              <span class="HP-date" style="color: green;">{{ HP.tanggal }}</span>
+            </li>
+          </ul>
+        </div>
+        <div class="glass-card">
+          <h2>Jatuh Tempo Hutang Piutang Selesai</h2>
+          <ul class="HP-list">
+            <li v-for="HP in pastHp" :key="HP.id" class="HP-item">
+              <span class="HP-kategori" style="color: red; margin-right: 10px;">{{ HP.kategori }}</span>
+              <span class="HP-date" style="color: red;">{{ HP.tanggal }}</span>
+            </li>
+          </ul>
+        </div>
+      
+        <div class="glass-card">
+          <h2>Sisa Saldo</h2>
+          <p class="balance" :class="{ 'positive': totalSaldo > 0, 'negative': totalSaldo < 0 }">
+            Rp {{ formatCurrency(totalSaldo) }}
+          </p>
+        </div>
       </div>
-    </div>
-    <div class="laporan-keuangan">
-      <h3>Laporan Keuangan</h3>
-      <table>
-        <thead>
-          <tr>
-            <th>No</th>
-            <th>Nama Event</th>
-            <th>Bulan</th>
-            <th>Tahun</th>
-            <th>Pemasukan</th>
-            <th>Pengeluaran</th>
-            <th>Saldo</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>1</td>
-            <td>event panjat tebing A</td>
-            <td>Mei</td>
-            <td>2023</td>
-            <td>Rp 1.500.000</td>
-            <td>-</td>
-            <td>Rp 1.500.000</td>
-          </tr>
-          <tr>
-            <td>2</td>
-            <td>event panjat pohon pinang</td>
-            <td>Mei</td>
-            <td>2023</td>
-            <td>-</td>
-            <td>Rp 500.000</td>
-            <td>Rp 1.000.000</td>
-          </tr>
-          <tr>
-            <td>3</td>
-            <td>event panjat pohon durian</td>
-            <td>Mei</td>
-            <td>2023</td>
-            <td>Rp 2.000.000</td>
-            <td>-</td>
-            <td>Rp 3.000.000</td>
-          </tr>
-          <tr>
-            <td>4</td>
-            <td>event panjat pohon siwalan</td>
-            <td>Mei</td>
-            <td>2023</td>
-            <td>-</td>
-            <td>Rp 1.000.000</td>
-            <td>Rp 2.000.000</td>
-          </tr>
-        </tbody>
-        <tfoot>
-          <tr>
-            <td colspan="4">Total</td>
-            <td>Rp 3.500.000</td>
-            <td>Rp 1.500.000</td>
-            <td>Rp 2.000.000</td>
-          </tr>
-        </tfoot>
-      </table>
-    </div>
-  </div>
+  
 </template>
 
 <script>
+import axios from 'axios';
+
 export default {
   name: 'DashboardHome',
   data() {
     return {
-      // Data untuk saldo dan laporan keuangan bisa ditambahkan di sini
+      totalSaldo: 0,
+      events: [],
+      venues: [],
+      upcomingEvents: [], // Event mendatang
+      pastEvents: [], // Event yang sudah selesai
+      hutang_piutang: [],
+      upcomingHp: [],
+      pastHp: [],
     }
+  },
+  methods: {
+    fetchTotalSaldo() {
+      axios.get('http://127.0.0.1:8000/api/show-total-saldo')
+        .then(response => {
+          this.totalSaldo = response.data.total_saldo;
+        })
+        .catch(error => {
+          console.error('Error fetching total saldo:', error);
+        });
+    },
+    formatCurrency(value) {
+      return new Intl.NumberFormat('id-ID').format(value);
+    },
+    fetchEvents() {
+      axios.get('http://127.0.0.1:8000/api/show-event-for-dashboard')
+        .then(response => {
+          if (response.data.success) {
+            this.upcomingEvents = response.data.upcoming_events;
+            this.pastEvents = response.data.past_events;
+          } else {
+            console.error('Gagal mengambil data event:', response.data.message);
+          }
+        })
+        .catch(error => {
+          console.error('Gagal mengambil data event:', error);
+        });
+    }
+  ,
+  fetchhutangpiutang() {
+      axios.get('http://127.0.0.1:8000/api/show-hp-for-dashboard')
+        .then(response => {
+          if (response.data.success) {
+            this.upcomingHp = response.data.upcoming_hps; // Pastikan variabel ini benar
+            this.pastHp = response.data.past_hps;
+          } else {
+            console.error('Gagal mengambil data HP:', response.data.message);
+          }
+        })
+        .catch(error => {
+          console.error('Gagal mengambil data HP:', error);
+        });
+    }
+  },
+  mounted() {
+    
+    this.fetchTotalSaldo();
+    this.fetchEvents();
+    this.fetchhutangpiutang()
   }
+  
 };
 </script>
 
@@ -110,14 +135,14 @@ export default {
   text-shadow: 2px 2px 4px rgba(0, 102, 204, 0.1);
 }
 
-.saldo-summary {
+.input-columns {
   display: flex;
   justify-content: space-between;
-  margin-bottom: 30px;
+  margin-top: 30px;
 }
 
-.saldo-card {
-  width: 48%;
+.input-column {
+  width: 30%;
   background: #ffffff;
   border-radius: 15px;
   padding: 20px;
@@ -126,54 +151,16 @@ export default {
   transition: transform 0.3s ease;
 }
 
-.saldo-card:hover {
+.input-column:hover {
   transform: translateY(-5px);
 }
 
-.icon-container {
-  font-size: 3em;
-  color: #0066cc;
-  margin-bottom: 15px;
-}
-
-.saldo-masuk {
-  color: green;
-}
-
-.saldo-keluar {
-  color: red;
-}
-
-table {
-  width: 100%;
-  border-collapse: separate;
-  border-spacing: 0;
-  border: none;
-  border-radius: 8px;
-  overflow: hidden;
-  box-shadow: 0 4px 6px rgba(0, 102, 204, 0.1);
-  background: #ffffff;
-}
-
-th, td {
-  border: none;
-  padding: 12px;
-  text-align: left;
-}
-
-th {
-  background-color: #e6f2ff;
-  font-weight: bold;
-  color: #0066cc;
-}
-
-tbody tr:nth-child(even) {
-  background-color: #f0f8ff;
-}
-
-tfoot {
-  font-weight: bold;
-  background-color: #e6f2ff;
+.input-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 150px;
 }
 
 h3 {
@@ -182,17 +169,23 @@ h3 {
   font-size: 1.5em;
 }
 
-.laporan-keuangan {
-  margin-top: 30px;
-  background: #ffffff;
-  border-radius: 15px;
-  padding: 20px;
-  box-shadow: 0 4px 6px rgba(0, 102, 204, 0.1);
+p {
+  margin-bottom: 15px;
+  color: #333;
 }
 
-tbody tr:hover {
-  background-color: #cce6ff;
+.add-button {
+  background-color: #0066cc;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
   transition: background-color 0.3s ease;
+}
+
+.add-button:hover {
+  background-color: #0052a3;
 }
 
 @keyframes fadeIn {
@@ -200,12 +193,83 @@ tbody tr:hover {
   to { opacity: 1; transform: translateY(0); }
 }
 
-.saldo-card {
+.input-column {
   animation: fadeIn 0.5s ease-out;
 }
+.dashboard-content {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 20px;
+}
 
-.laporan-keuangan {
-  animation: fadeIn 0.5s ease-out 0.3s;
-  animation-fill-mode: both;
+.glass-card {
+            width: 300px;
+            
+            background: rgba(255, , 255, 0.1); /* Semi-transparan */
+            backdrop-filter: blur(15px); /* Efek blur */
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); /* Bayangan lembut */
+            border: 1px solid rgba(255, 255, 255, 0.2); /* Garis batas transparan */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .glass-card h2 {
+            color: blue;
+            font-size: 24px;
+        }
+
+        .glass-card p {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 16px;
+            text-align: center;
+        }
+
+        .glass-card button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.3);
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+.card h2 {
+  margin-bottom: 15px;
+  color: #0274d1;
+}
+
+.card ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.card li {
+  margin-bottom: 10px;
+}
+
+.balance {
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.balance.positive {
+  color: green;
+}
+
+.balance.negative {
+  color: red;
+}
+
+@media (max-width: 768px) {
+  .dashboard-content {
+    grid-template-columns: 1fr;
+    
+  }
 }
 </style>
