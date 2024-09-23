@@ -58,10 +58,10 @@ export default {
   width: 100%;
   border-collapse: collapse;
   margin-top: 20px;
-  background: linear-gradient(#1E1E2E, #1E1E2E); /* Background ungu tua kehitaman */
+  background: #fcfafa; /* Background ungu tua kehitaman */
   border-radius: 10px;
   overflow: hidden;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 8px rgba(36, 35, 35, 0.1);
 }
 
 .transaction-table th, 
@@ -72,7 +72,7 @@ export default {
 }
 
 .transaction-table th {
-  background: linear-gradient(#00D2FF, #3A7BD5); /* Background biru cerah ke biru tua */
+  background: linear-gradient(#f1b204, #ff7b00); /* Background biru cerah ke biru tua */
   color: #EAEAEA; /* Text abu terang */
   font-weight: bold;
   text-transform: uppercase;

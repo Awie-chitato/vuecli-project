@@ -76,19 +76,20 @@
     width: 100%;
     border-collapse: collapse;
     margin-top: 20px;
-    background: #1E1E2E; /* Background ungu tua kehitaman */
+    background: #fcfafa; /* Background ungu tua kehitaman */
     border-radius: 10px;
     overflow: hidden;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 8px rgba(36, 35, 35, 0.1);
   }
   
   .eventlist-table th, .eventlist-table td {
     padding: 15px;
     border-bottom: 1px solid #e0e0e0;
+    text-align: left;
   }
   
   .eventlist-table th {
-    background: linear-gradient(#00D2FF, #3A7BD5); /* Background biru cerah ke biru tua */
+    background: linear-gradient(#f1b204, #ff7b00); /* Background biru cerah ke biru tua */
     color: #EAEAEA; /* Text abu terang */
     font-weight: bold;
     text-transform: uppercase;
@@ -105,17 +106,13 @@
   
   .eventlist-table td {
     font-size: 14px;
-    color: #333;
+    color: #0e0d0d;
+    font-weight: bold;
+
   }
+
   
-  .eventlist-table th:first-child, .eventlist-table td:first-child {
-    border-top-left-radius: 10px;
-    border-bottom-left-radius: 10px;
-  }
   
-  .eventlist-table th:last-child, .eventlist-table td:last-child {
-    border-top-right-radius: 10px;
-    border-bottom-right-radius: 10px;
-  }
+  
   </style>
   

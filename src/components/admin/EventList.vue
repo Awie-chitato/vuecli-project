@@ -6,18 +6,18 @@
     <!-- <h2 class="dashboard-title">Event List</h2> -->
     <div class="transaction-container">
       <div v-if="showInputForm" class="input-form">
-        <h3 style="color: #EAEAEA;">{{ editMode ? 'Edit Event' : 'Form Input Event' }}</h3>
+        <h3 style="color: #070707;">{{ editMode ? 'Edit Event' : 'Form Input Event' }}</h3>
         <form @submit.prevent="submitForm">
           <div class="form-group">
-            <label for="namaEvent" style="color: #EAEAEA;">Nama Event:</label>
+            <label for="namaEvent" style="color: #070707;">Nama Event:</label>
             <input type="text" id="namaEvent" v-model="newEventList.nama_event" required>
           </div>
           <div class="form-group">
-            <label for="tempatEvent" style="color: #EAEAEA;">Nama Tempat:</label>
+            <label for="tempatEvent" style="color: #070707;">Nama Tempat:</label>
             <input type="text" id="tempatEvent" v-model="newEventList.tempat_event" required>
           </div>
           <div class="form-group">
-            <label for="tanggalEvent" style="color: #EAEAEA;">Tanggal:</label>
+            <label for="tanggalEvent" style="color: #070707;">Tanggal:</label>
             <input type="date" id="tanggalEvent" v-model="newEventList.tanggal_event" required>
           </div>
           <button type="submit" class="submit-button" style="background: linear-gradient(#00D2FF, #3A7BD5); color: #EAEAEA; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer; transition: background 0.3s ease; min-width: 100px;">{{ editMode ? 'Update' : 'Simpan' }}</button>
@@ -55,7 +55,7 @@
       </div>
       <div v-if="showTransactionTypeModal" class="modal">
         <div class="modal-content">
-          <h3 style="color: #EAEAEA;">Pilih Jenis Transaksi</h3>
+          <h3 style="color: #070707;">Pilih Jenis Transaksi</h3>
           <button @click="selectTransactionType('pemasukan')" style="background: linear-gradient(#00D2FF, #3A7BD5); color: #EAEAEA; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer; transition: background 0.3s ease; min-width: 100px;">Transaksi Pemasukan</button>
           <button @click="selectTransactionType('pengeluaran')" style="background: linear-gradient(#00D2FF, #3A7BD5); color: #EAEAEA; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer; transition: background 0.3s ease; min-width: 100px;">Transaksi Pengeluaran</button>
           <button @click="showTransactionTypeModal = false" style="background: linear-gradient(#cc0000, #cc0000); color: #EAEAEA; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer; transition: background 0.3s ease; min-width: 100px;">Batal</button>
@@ -63,19 +63,19 @@
       </div>
 
       <div v-if="showInputTransactionForm" class="input-form">
-        <h3 style="color: #EAEAEA;">{{ editMode ? 'Edit Transaksi' : 'Form Input Transaksi' }} {{ selectedTransactionType === 'pemasukan' ? 'Pemasukan' : 'Pengeluaran' }}</h3>
+        <h3 style="color: #070707;">{{ editMode ? 'Edit Transaksi' : 'Form Input Transaksi' }} {{ selectedTransactionType === 'pemasukan' ? 'Pemasukan' : 'Pengeluaran' }}</h3>
         <form @submit.prevent="submitTransactionForm">
           <input type="hidden" v-model="event_id_transaction">
           <div class="form-group">
-            <label for="nominal" style="color: #EAEAEA;">Nominal:</label>
+            <label for="nominal" style="color: #070707;">Nominal:</label>
             <input type="number" id="nominal" v-model="newTransaction.nominal" required>
           </div>
           <div class="form-group">
-            <label for="deskripsi" style="color: #EAEAEA;">Deskripsi:</label>
+            <label for="deskripsi" style="color: #070707;">Deskripsi:</label>
             <input type="text" id="deskripsi" v-model="newTransaction.deskripsi" required>
           </div>
           <div class="form-group">
-            <label for="metodePembayaran" style="color: #EAEAEA;">Metode Pembayaran:</label>
+            <label for="metodePembayaran" style="color: #070707;">Metode Pembayaran:</label>
             <select id="metodePembayaran" v-model="newTransaction.metode_pembayaran" required>
               <option value="">Pilih Metode Pembayaran</option>
               <option value="tunai">Tunai</option>
@@ -83,7 +83,7 @@
             </select>
           </div>
           <div class="form-group">
-            <label for="status" style="color: #EAEAEA;">Status:</label>
+            <label for="status" style="color: #070707;">Status:</label>
             <select id="status" v-model="newTransaction.status" required>
               <option value="">Pilih Status</option>
               <option value="selesai">Selesai</option>
@@ -258,10 +258,10 @@ export default {
   width: 100%;
   border-collapse: collapse;
   margin-top: 20px;
-  background: linear-gradient(#1E1E2E, #1E1E2E); /* Background ungu tua kehitaman */
+  background: linear-gradient(#eeeeee, #e3e3e7); /* Background ungu tua kehitaman */
   border-radius: 10px;
   overflow: hidden;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 8px rgba(240, 240, 240, 0.1);
 }
 
 .eventlist-table th,  /* Ubah di sini */
@@ -272,7 +272,7 @@ export default {
 
 .eventlist-table th {  /* Ubah di sini */
   background: linear-gradient(#00D2FF, #3A7BD5); /* Background biru cerah ke biru tua */
-  color: #EAEAEA; /* Text abu terang */
+  color: #070707; /* Text abu terang */
   font-weight: bold;
   text-transform: uppercase;
 }
@@ -317,7 +317,7 @@ export default {
 
 .add-button {
   background: linear-gradient(#00D2FF, #3A7BD5); /* Background biru cerah ke biru tua */
-  color: #EAEAEA; /* Text abu terang */
+  color: #0e0d0d; /* Text abu terang */
   border: none;
   padding: 5px 10px;
   border-radius: 8px;
@@ -347,7 +347,7 @@ export default {
   border: none;
   border-radius: 3px;
   cursor: pointer;
-  color: #EAEAEA; /* Text abu terang */
+  color: #000000; /* Text abu terang */
   margin: 0 2px;
 }
 
@@ -363,7 +363,7 @@ export default {
 }
 
 .input-form {
-  background: linear-gradient(#f2f2f2, #f2f2f2); /* Background form input */
+  background: linear-gradient(rgb(238, 237, 237), #3d7ff8); /* Background form input */
   padding: 20px;
   border-radius: 5px;
   margin-top: 20px;
@@ -381,7 +381,7 @@ export default {
 .form-group input, .form-group select, .form-group textarea {
   width: 100%;
   padding: 5px;
-  border: 1px solid #ddd;
+  border: 1px solid #000000;
   border-radius: 3px;
 }
 
@@ -420,7 +420,7 @@ export default {
   background-color: #fefefe;
   margin: 15% auto;
   padding: 20px;
-  border: 1px solid #888;
+  border: 1px solid #d6d6d6;
   width: 80%;
   max-width: 500px;
   border-radius: 5px;

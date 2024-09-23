@@ -3,31 +3,25 @@
       <aside class="sidebar w-64 bg-purple bg-opacity-10 backdrop-filter backdrop-blur-lg p-5 flex flex-col">
         <div class="logo">
           <!-- Logo FPTI yang diubah menjadi bulat dan di-zoom -->
-          <img src="@/assets/fpti.png" alt="Logo FPTI" class="logo-image rounded-full w-32 h-32 mx-auto mb-4 shadow-lg" />
+          <img src="@/assets/fpti_indonesia.png" alt="Logo FPTI" class="logo-image rounded-full w-32 h-32 mx-auto mb-4 shadow-lg" />
         </div>
         <ul class="menu space-y-4">
-          <li @click="navigateTo('dashboard_home')" class="text-white py-2 px-4 rounded-lg bg-opacity-20 hover:bg-blue-200 hover:bg-opacity-30 cursor-pointer transition">
+          <li @click="navigateTo('dashboard_home')" class="text-black py-2 px-4 rounded-lg bg-opacity-20 hover:bg-blue-200 hover:bg-opacity-30 cursor-pointer transition">
             Dashboard
           </li>
-          <li @click="navigateTo('daftarevent')" class="text-white py-2 px-4 rounded-lg bg-opacity-20 hover:bg-blue-200 hover:bg-opacity-30 cursor-pointer transition">
+          <li @click="navigateTo('daftarevent')" class="text-black py-2 px-4 rounded-lg bg-opacity-20 hover:bg-blue-200 hover:bg-opacity-30 cursor-pointer transition">
             Event List
           </li>
-          <li @click="navigateTo('transaksievent')" class="text-white py-2 px-4 rounded-lg bg-opacity-20 hover:bg-blue-200 hover:bg-opacity-30 cursor-pointer transition">
+          <li @click="navigateTo('transaksievent')" class="text-black py-2 px-4 rounded-lg bg-opacity-20 hover:bg-blue-200 hover:bg-opacity-30 cursor-pointer transition">
             Transaksi
           </li>
-          <li @click="navigateTo('hpuser')" class="text-white py-2 px-4 rounded-lg bg-opacity-20 hover:bg-blue-200 hover:bg-opacity-30 cursor-pointer transition">
+          <li @click="navigateTo('hpuser')" class="text-black py-2 px-4 rounded-lg bg-opacity-20 hover:bg-blue-200 hover:bg-opacity-30 cursor-pointer transition">
             Hutang Piutang
-          </li>
-          <li @click="navigateTo('financials')" class="text-white py-2 px-4 rounded-lg bg-opacity-20 hover:bg-blue-200 hover:bg-opacity-30 cursor-pointer transition">
-            Laporan Keuangan
           </li>
         </ul>
         <div class="settings mt-auto">
-          <button @click="navigateTo('settings')" class="w-full py-2 px-4 rounded-lg bg-blue-500 hover:bg-blue-600 text-white mb-2">
-            ⚙️ Pengaturan
-          </button>
           <button @click="handleLogout" class="w-full py-2 px-4 rounded-lg bg-red-500 hover:bg-red-600 text-white">
-            🚪 Keluar
+            🚪 logout
           </button>
         </div>
       </aside>
@@ -36,7 +30,7 @@
           <h1 class="text-3xl font-bold text-white">{{ pageTitle }}</h1>
           <div class="quick-actions flex items-center">
             <img src="https://via.placeholder.com/150" alt="Avatar Pengguna" class="user-avatar rounded-full w-12 h-12 shadow-lg" />
-            <span class="user-name text-white ml-4"> Awie Chitato </span>
+            <span class="user-name text-white ml-4"> USER </span>
           </div>
         </header>
         <router-view />
@@ -50,18 +44,7 @@
     data() {
       return {
         pageTitle: 'Dashboard',
-        events: [
-          { id: 1, name: 'Konser Musik', date: '2023-07-15' },
-          { id: 2, name: 'Pameran Seni', date: '2023-07-20' }
-        ],
-        venues: [
-          { id: 1, name: 'Gedung Serbaguna', location: 'Jakarta' },
-          { id: 2, name: 'Lapangan Merdeka', location: 'Surabaya' }
-        ],
-        transactions: [
-          { id: 1, description: 'Pembayaran Tiket', amount: 500000 },
-          { id: 2, description: 'Sewa Tempat', amount: 2000000 }
-        ],
+        
         balance: 10000000,
         cashIn: 5000000,
         cashOut: 3000000,
@@ -108,12 +91,12 @@
     height: 100vh;
     color: hsl(0, 0%, 4%);
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: linear-gradient(135deg, #1E1E2E, #1E1E2E);
+    background: linear-gradient(135deg, #af6107, #fa871b);
   }
   
   .sidebar {
     width: 250px;
-    background-color: #1E1E2E;
+    background-color: #f8f8f6;
     padding: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
     display: flex;
@@ -138,8 +121,9 @@
   .logo-image {
     width: 120px;
     height: 120px;
+    padding: 10px;
     margin-top: 10px;
-    border-radius: 50%;
+    border-radius: 30%;
     object-fit: cover;
     object-position: center;
     border: 4px solid #fff;
@@ -159,18 +143,18 @@
     width: 100%;
     padding: 10px;
     border: none;
-    background-color: #fff;
-    color: #1E1E2E;
+    background-color: #fa871b;
+    color: #030303;
     cursor: pointer;
     transition: background-color 0.3s, transform 0.3s;
     margin-top: -100px;
     margin-bottom: 10px;
     border-radius: 4px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 4px rgba(235, 116, 5, 0.1);
   }
   
   .settings button:hover {
-    background-color: rgba(255, 255, 255, 0.8);
+    background-color: rgba(2, 2, 2, 0.8);
     transform: scale(1.05);
   }
   
@@ -188,7 +172,7 @@
     display: flex;
     align-items: center;
     transition: background-color 0.3s, transform 0.3s;
-    color: #fff;
+    color: #000000;
     font-weight: bold;
   }
   
@@ -200,8 +184,8 @@
   .content {
     flex: 1;
     padding: 20px;
-    background-color: rgba(255, 255, 255, 0.1); /* Warna keren untuk glassmorphism */
-    box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.1);
+    background-color: rgba(240, 119, 20, 0.336); /* Warna keren untuk glassmorphism */
+    box-shadow: inset 0 0 10px rgba(235, 234, 234, 0.1);
     overflow-y: auto; /* Allows content to scroll if it overflows */
     transition: background-color 0.3s;
   }
@@ -247,15 +231,15 @@
   }
   
   .card {
-    background-color: #1E1E2E;
+    background-color: #d6d6d6;
     border-radius: 8px;
     padding: 20px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 4px 8px rgba(250, 249, 249, 0.2);
     transition: box-shadow 0.3s, transform 0.3s;
   }
   
   .card:hover {
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 8px 16px rgba(255, 254, 254, 0.3);
     transform: translateY(-5px);
   }
   

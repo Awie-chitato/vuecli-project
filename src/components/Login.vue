@@ -67,7 +67,7 @@ export default {
   justify-content: center;
   align-items: center;
   height: 100vh;
-  background: linear-gradient(to right, #00c6ff, #0072ff);
+  background: linear-gradient(to right, #af6107, #fa871b);
   background-size: cover;
   position: relative;
 }
@@ -124,13 +124,13 @@ export default {
 .input-box input:valid ~ label {
   top: -20px;
   left: 0;
-  color: #00c6ff;
+  color: #fa871b;
   font-size: 12px;
 }
 
 /* Tombol login dengan efek hover */
 .login-button {
-  background: rgba(0, 198, 255, 0.5);
+  background: rgb(0, 38, 255);
   color: white;
   border: none;
   padding: 10px 20px;

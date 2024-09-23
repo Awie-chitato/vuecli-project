@@ -3,14 +3,14 @@
     <aside class="sidebar w-64 bg-purple bg-opacity-10 backdrop-filter backdrop-blur-lg p-5 flex flex-col">
       <div class="logo">
         <!-- Logo FPTI yang diubah menjadi bulat dan di-zoom -->
-        <img src="@/assets/fpti.png" alt="Logo FPTI" class="logo-image rounded-full w-32 h-32 mx-auto mb-4 shadow-lg" />
+        <img src="@/assets/fpti_indonesia.png" alt="Logo FPTI" class="logo-image rounded-full w-10 h-10 mx-auto mb-2 shadow-lg" />
       </div>
       <ul class="menu space-y-4">
         <li @click="navigateTo('dashboardhome')" class="text-white py-2 px-4 rounded-lg bg-opacity-20 hover:bg-blue-200 hover:bg-opacity-30 cursor-pointer transition">
           Dashboard
         </li>
         <li @click="navigateTo('eventlist')" class="text-white py-2 px-4 rounded-lg bg-opacity-20 hover:bg-blue-200 hover:bg-opacity-30 cursor-pointer transition">
-          Event List
+          Event
         </li>
         <li @click="navigateTo('transactions')" class="text-white py-2 px-4 rounded-lg bg-opacity-20 hover:bg-blue-200 hover:bg-opacity-30 cursor-pointer transition">
           Transaksi
@@ -23,11 +23,11 @@
         </li>
       </ul>
       <div class="settings mt-auto">
-        <button @click="navigateTo('settings')" class="w-full py-2 px-4 rounded-lg bg-blue-500 hover:bg-blue-600 text-white mb-2">
+        <!-- <button @click="navigateTo('settings')" class="w-full py-2 px-4 rounded-lg bg-blue-500 hover:bg-blue-600 text-white mb-2">
           ⚙️ Pengaturan
-        </button>
+        </button> -->
         <button @click="handleLogout" class="w-full py-2 px-4 rounded-lg bg-red-500 hover:bg-red-600 text-white">
-          🚪 Keluar
+          🚪 logout
         </button>
       </div>
     </aside>
@@ -36,7 +36,7 @@
         <h1 class="text-3xl font-bold text-white">{{ pageTitle }}</h1>
         <div class="quick-actions flex items-center">
           <img src="https://via.placeholder.com/150" alt="Avatar Pengguna" class="user-avatar rounded-full w-12 h-12 shadow-lg" />
-          <span class="user-name text-white ml-4"> Awie Chitato </span>
+          <span class="user-name text-white ml-4"> ADMIN </span>
         </div>
       </header>
       <router-view />
@@ -138,8 +138,9 @@ export default {
 .logo-image {
   width: 120px;
   height: 120px;
+  padding: 10px;
   margin-top: 10px;
-  border-radius: 50%;
+  border-radius: 30%;
   object-fit: cover;
   object-position: center;
   border: 4px solid #fff;

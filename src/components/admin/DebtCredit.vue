@@ -275,7 +275,7 @@ label {
 }
 
 .input-form {
-  background-color: #f9f9f9;
+  background: linear-gradient(#00D2FF, #3A7BD5);
   border: 1px solid #ddd;
   border-radius: 8px;
   padding: 20px;
@@ -287,7 +287,7 @@ label {
 .input-form h3 {
   margin-bottom: 20px;
   font-size: 1.5em;
-  color: #333;
+  color: #0c0c0c;
 }
 
 .form-group {
@@ -298,7 +298,7 @@ label {
   display: block;
   margin-bottom: 5px;
   font-weight: bold;
-  color: #555;
+  color: #000000;
 }
 
 .form-group input[type="text"],
@@ -308,18 +308,19 @@ label {
 .form-group select {
   width: 100%;
   padding: 8px;
-  border: 1px solid #ccc;
+  border: 1px solid #d8d3d3;
   border-radius: 4px;
 }
 
 .form-group textarea {
   resize: vertical;
   height: 100px;
+  color: black;
 }
 
 .submit-button,
 .cancel-button {
-  background-color: #007bff;
+  background-color: #1000f3;
   color: #fff;
   border: none;
   padding: 10px 20px;
@@ -331,15 +332,15 @@ label {
 
 .submit-button:hover,
 .cancel-button:hover {
-  background-color: #0056b3;
+  background-color: #0013bb;
 }
 
 .cancel-button {
-  background-color: #6c757d;
+  background-color: #ff1e1e;
 }
 
 .cancel-button:hover {
-  background-color: #5a6268;
+  background-color: #ac0000;
 }
 
 
@@ -348,22 +349,28 @@ label {
   width: 100%;
   border-collapse: collapse;
   margin-top: 20px;
-  background-color: #f9f9f9;
+  background: linear-gradient(#fffdfd, #e0e0e0); /* Background ungu tua kehitaman */
   border-radius: 10px;
   overflow: hidden;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 8px rgba(240, 240, 240, 0.1);
 }
 
 .table thead tr {
   background-color: #f0f0f0;
 }
 
-.table td, .table th {
-  border: 1px solid #ddd;
-  padding: 12px; /* Perbaiki padding agar lebih nyaman dibaca */
+.table td , .table th {
+  padding: 15px;
   text-align: left;
+  border-bottom: 1px solid #e0e0e0;
+  
 }
-
+.table th{
+  background: linear-gradient(#00D2FF, #3A7BD5); /* Background biru cerah ke biru tua */
+  color: #000000; /* Text abu terang */
+  font-weight: bold;
+  text-transform: uppercase;
+}
 /* Responsif untuk layar kecil */
 @media screen and (max-width: 600px) {
   .table td, .table th {

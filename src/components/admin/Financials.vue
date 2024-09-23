@@ -1,167 +1,309 @@
 <template>
-  <div class="Financials">
-    <h2>Laporan Keuangan</h2>
-    <div class="financial-categories">
-      <div class="category" @click="showCategory('realisasi')">
-        <img src="@/assets/realisasi-icon.png" alt="Realisasi Anggaran" class="category-icon">
-        <span>Realisasi Anggaran</span>
-      </div>
-      <div class="category" @click="showCategory('operasional')">
-        <img src="@/assets/operasional-icon.png" alt="Operasional" class="category-icon">
-        <span>Operasional</span>
-      </div>
-      <div class="category" @click="showCategory('bukuBesar')">
-  <img src="@/assets/notebook_fill@3x.png" alt="Buku Besar" class="category-icon">
-  <span>Buku Besar</span>
-</div>
-
+  <div class="container">
+    <h1 class="title">Buku Besar</h1>
+    <div class="button-group">
+      <!-- Tombol untuk mendownload PDF -->
+      <button @click="downloadPDF" class="btn">Download Transaksi</button>
+      <button @click="downloadHutang" class="btn">Download Hutang Piutang</button>
+      <button @click="downloadEventListPDF" class="btn">Download Event List</button>
     </div>
-    
-    <div v-if="selectedCategory === 'bukuBesar'">
-      <div class="filter-section">
-        <button @click="toggleFilter" class="filter-button">Filter By</button>
-        <div v-if="showFilter" class="filter-options">
-          <select v-model="selectedName">
-            <option value="">Pilih Nama</option>
-            <option v-for="name in names" :key="name" :value="name">{{ name }}</option>
-          </select>
-          <select v-model="selectedMonth">
-            <option value="">Pilih Bulan</option>
-            <option v-for="month in months" :key="month" :value="month">{{ month }}</option>
-          </select>
-          <select v-model="selectedYear">
-            <option value="">Pilih Tahun</option>
-            <option v-for="year in years" :key="year" :value="year">{{ year }}</option>
-          </select>
-        </div>
-      </div>
-      <table class="financial-table">
-        <thead>
-          <tr>
-            <th>No</th>
-            <th>Nama</th>
-            <th>Bulan</th>
-            <th>Tahun</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="(item, index) in filteredData" :key="index">
-            <td>{{ index + 1 }}</td>
-            <td>{{ item.nama }}</td>
-            <td>{{ item.bulan }}</td>
-            <td>{{ item.tahun }}</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
+    <!-- Kode lainnya untuk menampilkan data transaksi -->
   </div>
 </template>
 
 <script>
+import axios from 'axios';
+import jsPDF from 'jspdf'; // Import jsPDF
+import 'jspdf-autotable'; // Import jsPDF AutoTable
+// Fungsi untuk mengonversi gambar menjadi Base64
+function getBase64Image(url, callback) {
+  const img = new Image();
+  img.crossOrigin = 'Anonymous'; // Perbolehkan pengambilan gambar dari domain lain
+  img.onload = function() {
+    const canvas = document.createElement('canvas');
+    canvas.width = this.width;
+    canvas.height = this.height;
+    const ctx = canvas.getContext('2d');
+    ctx.drawImage(this, 0, 0);
+    const dataURL = canvas.toDataURL('image/png');
+    callback(dataURL);
+  };
+  img.onerror = function() {
+    console.error('Failed to load image:', url);
+  };
+  img.src = url;
+}
+
+
 export default {
   name: 'Financials',
   data() {
     return {
-      showFilter: false,
-      selectedName: '',
-      selectedMonth: '',
-      selectedYear: '',
-      names: ['John Doe', 'Jane Smith', 'Bob Johnson'],
-      months: ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'],
-      years: [2021, 2022, 2023],
-      financialData: [
-        { nama: 'John Doe', bulan: 'Januari', tahun: 2023 },
-        { nama: 'Jane Smith', bulan: 'Februari', tahun: 2023 },
-        { nama: 'Bob Johnson', bulan: 'Maret', tahun: 2023 },
-      ],
-      selectedCategory: null
+      showInputForm: false,
+      showTransactionTypeModal: false,
+      editMode: false,
+      selectedTransactionType: '',
+      newTransaction: {
+        id: null,
+        nama_event: '',
+        nominal: '',
+        tanggal: '',
+        deskripsi: '',
+        metode_pembayaran: '',
+        status: '',
+        jenis_transaksi: ''
+      },
+      combinedTransactions: [],
+      events: [],
+      combinedDebtCredits: [],
+      eventlist: [],
+      newEventList: {
+      id: null,
+      nama_event: '',
+      tempat_event: '',
+      tanggal_event: ''
+    },
     };
   },
-  computed: {
-    filteredData() {
-      return this.financialData.filter(item => {
-        return (!this.selectedName || item.nama === this.selectedName) &&
-               (!this.selectedMonth || item.bulan === this.selectedMonth) &&
-               (!this.selectedYear || item.tahun === this.selectedYear);
-      });
-    }
-  },
   methods: {
-    toggleFilter() {
-      this.showFilter = !this.showFilter;
+    fetchTransactions() {
+      axios.get('http://127.0.0.1:8000/api/show-dua-transaksi')
+        .then(response => {
+          if (response.data.success) {
+            this.combinedTransactions = response.data.data
+              .map(item => {
+                return {
+                  ...item,
+                };
+              })
+              .sort((a, b) => new Date(b.tanggal) - new Date(a.tanggal)); // Mengurutkan berdasarkan tanggal terbaru
+          } else {
+            console.error('Respon gagal:', response.data.message);
+          }
+        })
+        .catch(error => {
+          console.error('Terjadi kesalahan saat mengambil data transaksi:', error);
+        });
     },
-    showCategory(category) {
-      this.selectedCategory = category;
-    }
+    fetchEvents() {
+      axios.get('http://127.0.0.1:8000/api/show-semua-event-fpti')
+        .then(response => {
+          if (response.data.success) {
+            this.events = response.data.data;
+          } else {
+            console.error('Respon gagal:', response.data.message);
+          }
+        })
+        .catch(error => {
+          console.error('Terjadi kesalahan saat mengambil data event:', error);
+        });
+    },
+    fetchDebtCredits() {
+      axios.get('http://127.0.0.1:8000/api/show-semua-hp')
+        .then(response => {
+          this.combinedDebtCredits = response.data.data;
+        })
+        .catch(error => {
+          console.error('Error fetching debt credits:', error.response ? error.response.data : error.message);
+        });
+    },
+    getEventName(eventId) {
+      const event = this.events.find(e => e.id === eventId);
+      return event ? event.nama_event : 'Nama_Event'; // Tampilkan nama event jika ditemukan
+    },
+    editItem(transaction) {
+      this.editMode = true;
+      this.showInputForm = true;
+      this.newTransaction = { ...transaction };
+      this.selectedTransactionType = transaction.jenis_transaksi;
+    },
+    downloadPDF() {
+      const doc = new jsPDF();
+      
+        // Path gambar logo
+  const logoUrl = require('@/assets/fpti_indonesia.png');
+
+// Mengonversi gambar ke format Base64 dan menambahkannya ke PDF
+getBase64Image(logoUrl, (base64Image) => {
+  const logoWidth = 40; // Lebar logo
+  const logoHeight = 20; // Tinggi logo
+  const logoX = 10; // Posisi X (jarak dari kiri)
+  const logoY = 10; // Posisi Y (jarak dari atas)
+
+  // Menambahkan logo ke dokumen PDF
+  doc.addImage(base64Image, 'PNG', logoX, logoY, logoWidth, logoHeight);
+
+      // Buat tabel menggunakan jsPDF-AutoTable
+      doc.autoTable({
+        head: [['ID', 'Nama Event', 'Nominal', 'Tanggal', 'Deskripsi', 'Metode Pembayaran', 'Status', 'Aksi']],
+        body: this.combinedTransactions.map(transaction => [
+          transaction.id,
+          this.getEventName(transaction.event_id), // Ambil nama event menggunakan fungsi getEventName
+          transaction.nominal,
+          transaction.tanggal,
+          transaction.deskripsi,
+          transaction.metode_pembayaran,
+          transaction.status,
+          transaction.jenis_transaksi
+        ]),
+        margin: { top: logoY + logoHeight + 10 }
+      });
+
+      // Simpan dokumen PDF
+      doc.save('transactions.pdf');
+})
+    },
+    downloadHutang() {
+      const doc = new jsPDF();
+
+      // Path gambar logo
+  const logoUrl = require('@/assets/fpti_indonesia.png');
+
+// Mengonversi gambar ke format Base64 dan menambahkannya ke PDF
+getBase64Image(logoUrl, (base64Image) => {
+  const logoWidth = 40; // Lebar logo
+  const logoHeight = 20; // Tinggi logo
+  const logoX = 10; // Posisi X (jarak dari kiri)
+  const logoY = 10; // Posisi Y (jarak dari atas)
+
+  // Menambahkan logo ke dokumen PDF
+  doc.addImage(base64Image, 'PNG', logoX, logoY, logoWidth, logoHeight);
+
+      // Generate tabel dari data combinedDebtCredits
+      doc.autoTable({
+        head: [['Kategori', 'Nominal', 'Tanggal', 'Deskripsi', 'Pihak Kedua', 'Metode Pembayaran', 'Status']],
+        body: this.combinedDebtCredits.map(debtCredit => [
+          debtCredit.kategori,
+          debtCredit.nominal,
+          debtCredit.tanggal,
+          debtCredit.deskripsi,
+          debtCredit.pihak_kedua,
+          debtCredit.metode_pembayaran,
+          debtCredit.status,
+        ]),
+        margin: { top: logoY + logoHeight + 10 }
+      });
+
+      // Simpan dokumen PDF
+      doc.save('debt_credits.pdf');
+})
+  },
+    fetchEventList() {
+      axios.get('http://127.0.0.1:8000/api/show-semua-event-fpti')
+        .then(response => {
+          this.eventlist = response.data.data;
+        })
+        .catch(error => {
+          console.error('There was an error!', error);
+        });
+    },
+    downloadEventListPDF() {
+  const doc = new jsPDF();
+
+  // Path gambar logo
+  const logoUrl = require('@/assets/fpti_indonesia.png');
+
+  // Mengonversi gambar ke format Base64 dan menambahkannya ke PDF
+  getBase64Image(logoUrl, (base64Image) => {
+    const logoWidth = 40; // Lebar logo
+    const logoHeight = 20; // Tinggi logo
+    const logoX = 10; // Posisi X (jarak dari kiri)
+    const logoY = 10; // Posisi Y (jarak dari atas)
+
+    // Menambahkan logo ke dokumen PDF
+    doc.addImage(base64Image, 'PNG', logoX, logoY, logoWidth, logoHeight);
+
+    // Buat tabel menggunakan jsPDF-AutoTable
+    doc.autoTable({
+      head: [['ID', 'Nama Event', 'Tempat', 'Tanggal']],
+      body: this.eventlist.map(event => [
+        event.id,
+        event.nama_event,
+        event.tempat_event,
+        event.tanggal_event
+      ]),
+      margin: { top: logoY + logoHeight + 10 } // Menyesuaikan margin tabel setelah menambahkan logo
+    });
+
+    // Simpan dokumen PDF
+    doc.save('event_list.pdf');
+  });
+}
+
+
+  },
+  mounted() {
+    this.fetchTransactions();
+    this.fetchEvents();
+    this.fetchDebtCredits();
+    this.fetchEventList();
   }
 };
 </script>
 
+<style>
+/* Tambahkan style sesuai kebutuhan */
+</style>
 <style scoped>
-.Financials {
+/* Tambahkan style sesuai kebutuhan */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
   padding: 20px;
+  font-family: Arial, sans-serif;
 }
 
-.financial-categories {
+.title {
+  font-size: 2rem;
+  margin-bottom: 20px;
+  color: #ebebeb;
+  text-align: center;
+}
+
+.button-group {
   display: flex;
-  justify-content: space-around;
+  justify-content: center;
+  gap: 10px;
   margin-bottom: 20px;
 }
 
-.category {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  cursor: pointer;
-  transition: transform 0.3s ease;
-}
-
-.category:hover {
-  transform: scale(1.1);
-}
-
-.category-icon {
-  width: 50px;
-  height: 50px;
-  margin-bottom: 10px;
-}
-
-.filter-section {
-  text-align: right;
-  margin-bottom: 20px;
-}
-
-.filter-button {
-  padding: 10px 20px;
-  background-color: #0066cc;
-  color: white;
+.btn {
+  background-color: #007bff;
+  color: #fff;
   border: none;
-  border-radius: 5px;
+  border-radius: 4px;
+  padding: 10px 20px;
+  font-size: 1rem;
   cursor: pointer;
+  transition: background-color 0.3s;
 }
 
-.filter-options {
-  margin-top: 10px;
+.btn:hover {
+  background-color: #0056b3;
 }
 
-.filter-options select {
-  margin-left: 10px;
-  padding: 5px;
+.btn:focus {
+  outline: none;
 }
 
-.financial-table {
+table {
   width: 100%;
   border-collapse: collapse;
+  margin-top: 20px;
 }
 
-.financial-table th, .financial-table td {
+table th,
+table td {
   border: 1px solid #ddd;
   padding: 8px;
+}
+
+table th {
+  background-color: #f4f4f4;
   text-align: left;
 }
 
-.financial-table th {
-  background-color: #f2f2f2;
-  font-weight: bold;
+table tr:nth-child(even) {
+  background-color: #f9f9f9;
 }
 </style>

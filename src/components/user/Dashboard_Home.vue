@@ -218,7 +218,7 @@
           }
   
           .glass-card h2 {
-              color: #EAEAEA; /* Text abu terang */
+              color: #000000; /* Text abu terang */
               font-size: 20px;
           }
   
