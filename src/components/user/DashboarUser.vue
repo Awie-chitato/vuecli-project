@@ -10,7 +10,7 @@
             Dashboard
           </li>
           <li @click="navigateTo('daftarevent')" class="text-black py-2 px-4 rounded-lg bg-opacity-20 hover:bg-blue-200 hover:bg-opacity-30 cursor-pointer transition">
-            Event List
+            Event
           </li>
           <li @click="navigateTo('transaksievent')" class="text-black py-2 px-4 rounded-lg bg-opacity-20 hover:bg-blue-200 hover:bg-opacity-30 cursor-pointer transition">
             Transaksi

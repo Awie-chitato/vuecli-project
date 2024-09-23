@@ -3,7 +3,7 @@
     <!-- <h2 class="dashboard-title">Riwayat Hutang Piutang</h2> -->
 
     <div v-if="!showInputForm" class="history-section">
-      <h3 style="color: #FFFFFF; text-align: center;">Daftar Hutang Piutang</h3>
+      <h2 class="dashboard-title" style="color: #FFFFFF; text-align: center;">Daftar Hutang Piutang</h2>
       <div class="table-header" style="width: 10px; margin-bottom: 20px;">
         <button @click="showDebtCreditTypeModal = true" class="add-button" style="float: left; background: linear-gradient(#00D2FF, #3A7BD5); color: #EAEAEA; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer; transition: background 0.3s ease; min-width: 100px; margin-right: 20px;">Tambah</button>
       </div>

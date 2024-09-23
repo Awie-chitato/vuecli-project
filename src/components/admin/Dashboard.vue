@@ -144,7 +144,7 @@ export default {
   object-fit: cover;
   object-position: center;
   border: 4px solid #fff;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 4px 12px rgba(134, 129, 129, 0.2);
   transition: transform 0.3s ease;
 }
 

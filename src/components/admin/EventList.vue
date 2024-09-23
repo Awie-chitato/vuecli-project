@@ -1,5 +1,6 @@
 <template>
   <div class="eventlist">
+    <h2 class="dashboard-title" style="color: #FFFFFF; text-align: center;">Daftar Event</h2>
     <div style="width: 10px;"> 
       <button @click="showInputForm = true; resetForm();" class="add-button" style="float: left; background: linear-gradient(#00D2FF, #3A7BD5); color: #EAEAEA; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer; transition: background 0.3s ease; min-width: 100px;">Tambah</button>
     </div>

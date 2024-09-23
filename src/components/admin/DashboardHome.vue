@@ -5,8 +5,8 @@
           <h2>Event Mendatang</h2>
           <ul class="event-list">
             <li v-for="event in upcomingEvents" :key="event.id" class="event-item">
-              <span class="event-name" style="color: green; margin-right: 10px;">{{ event.nama_event }}</span>
-              <span class="event-date" style="color: green;">{{ event.tanggal_event }}</span>
+              <span class="event-name" style="color: whitesmoke; margin-right: 10px;">{{ event.nama_event }}</span>
+              <span class="event-date" style="color: whitesmoke;">{{ event.tanggal_event }}</span>
             </li>
           </ul>
         </div>
@@ -14,8 +14,8 @@
           <h2>Event Selesai</h2>
           <ul class="event-list">
             <li v-for="event in pastEvents" :key="event.id" class="event-item">
-              <span class="event-name" style="color: red; margin-right: 10px;">{{ event.nama_event }}</span>
-              <span class="event-date" style="color: red;">{{ event.tanggal_event }}</span>
+              <span class="event-name" style="color: whitesmoke; margin-right: 10px;">{{ event.nama_event }}</span>
+              <span class="event-date" style="color: whitesmoke;">{{ event.tanggal_event }}</span>
             </li>
           </ul>
         </div>
@@ -23,8 +23,8 @@
           <h2 style="text-align: center;">Jatuh Tempo Hutang Piutang Mendatang</h2>
           <ul class="HP-list">
             <li v-for="HP in upcomingHp" :key="HP.id" class="HP-item">
-              <span class="HP-kategori" style="color: green; margin-right: 10px;">{{ HP.kategori }}</span>
-              <span class="HP-date" style="color: green;">{{ HP.tanggal }}</span>
+              <span class="HP-kategori" style="color: whitesmoke; margin-right: 10px;">{{ HP.kategori }}</span>
+              <span class="HP-date" style="color: whitesmoke;">{{ HP.tanggal }}</span>
             </li>
           </ul>
         </div>
@@ -32,8 +32,8 @@
           <h2 style="text-align: center;">Jatuh Tempo Hutang Piutang Selesai</h2>
           <ul class="HP-list">
             <li v-for="HP in pastHp" :key="HP.id" class="HP-item">
-              <span class="HP-kategori" style="color: red; margin-right: 10px;">{{ HP.kategori }}</span>
-              <span class="HP-date" style="color: red;">{{ HP.tanggal }}</span>
+              <span class="HP-kategori" style="color: whitesmoke; margin-right: 10px;">{{ HP.kategori }}</span>
+              <span class="HP-date" style="color: whitesmoke;">{{ HP.tanggal }}</span>
             </li>
           </ul>
         </div>
